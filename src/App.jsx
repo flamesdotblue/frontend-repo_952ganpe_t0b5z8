@@ -194,7 +194,7 @@ export default function App() {
   }, [stopTimer, handleReset, startMs, startHours, status]);
 
   return (
-    <div className="min-h-screen bg-[#0a0e27] text-cyan-50">
+    <div className="min-h-screen bg-black text-[#F3F4F6]">
       <SplineHero />
 
       <main className="mx-auto -mt-16 flex max-w-6xl flex-col gap-6 px-4 pb-20">
@@ -209,8 +209,8 @@ export default function App() {
           onReset={handleReset}
         />
 
-        <section className="mx-auto w-full max-w-3xl rounded-xl border border-cyan-400/10 bg-[#0b1033]/40 p-4 text-xs text-cyan-200/70">
-          • Hourly notifications will appear here as subtle toasts. • Your timer automatically resumes after refresh or system restart. • Keep this tab open for smoothest visuals; timing stays accurate regardless.
+        <section className="mx-auto w-full max-w-3xl rounded-xl border border-[#D4AF37]/20 bg-black/60 p-4 text-xs text-[#F5DEB3]/80">
+          • Hourly notifications will appear as subtle toasts. • Your timer automatically resumes after refresh or system restart. • Keep this tab open for smoothest visuals; timing stays accurate regardless.
         </section>
       </main>
 

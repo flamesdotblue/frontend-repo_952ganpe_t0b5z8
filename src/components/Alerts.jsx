@@ -8,10 +8,10 @@ export default function Alerts({ alerts, onDismiss }) {
           key={a.id}
           className={`pointer-events-auto w-full rounded-xl border px-4 py-3 text-sm shadow-lg transition-all duration-500 ${
             a.type === 'warning'
-              ? 'border-yellow-400/30 bg-yellow-400/10 text-yellow-100'
+              ? 'border-[#D4AF37]/50 bg-[#D4AF37]/10 text-[#FDE68A]'
               : a.type === 'success'
-              ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-100'
-              : 'border-cyan-400/30 bg-cyan-400/10 text-cyan-100'
+              ? 'border-emerald-400/40 bg-emerald-400/10 text-emerald-100'
+              : 'border-[#D4AF37]/40 bg-black/70 text-[#F5DEB3]'
           } animate-[fadeIn_.2s_ease-out]`}
           onClick={() => onDismiss(a.id)}
         >
