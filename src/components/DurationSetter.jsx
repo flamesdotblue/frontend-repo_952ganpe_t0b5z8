@@ -1,86 +1,59 @@
 import React, { useState } from 'react';
 
-export default function DurationSetter({ onStart, disabled }) {
-  const [hours, setHours] = useState(6);
+export default function DurationSetter({ onStart, onReset, onStop, running }) {
+  const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
 
-  const setPreset = (h) => {
-    setHours(h);
-    setMinutes(0);
-  };
-
-  const handleStart = () => {
+  const start = () => {
     const h = Number(hours) || 0;
     const m = Number(minutes) || 0;
-    const totalMs = (h * 60 + m) * 60 * 1000;
-    if (totalMs <= 0) return;
-    onStart(totalMs);
+    const ms = (h * 60 + m) * 60 * 1000;
+    if (ms > 0) onStart(ms);
   };
 
   return (
-    <div className={`mx-auto w-full max-w-3xl rounded-2xl border border-[#D4AF37]/30 bg-black/60 p-5 shadow-[0_0_30px_rgba(212,175,55,0.12)] backdrop-blur `}>
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-1 flex-col gap-3">
-          <label className="text-xs uppercase tracking-wider text-[#F5DEB3]/80">Set Duration</label>
-          <div className="grid grid-cols-2 gap-3 sm:max-w-sm">
-            <div>
-              <div className="text-[10px] uppercase tracking-wider text-[#D4AF37]/80">Hours</div>
-              <input
-                type="number"
-                min="0"
-                max="72"
-                value={hours}
-                onChange={(e) => setHours(Math.max(0, Math.min(72, Number(e.target.value))))}
-                className="mt-1 w-full rounded-lg border border-[#D4AF37]/30 bg-[#0a0a0a] px-3 py-2 text-[#F3F4F6] outline-none ring-0 transition focus:border-[#D4AF37]/60 focus:shadow-[0_0_0_3px_rgba(212,175,55,0.25)]"
-              />
-            </div>
-            <div>
-              <div className="text-[10px] uppercase tracking-wider text-[#D4AF37]/80">Minutes</div>
-              <input
-                type="number"
-                min="0"
-                max="59"
-                value={minutes}
-                onChange={(e) => setMinutes(Math.max(0, Math.min(59, Number(e.target.value))))}
-                className="mt-1 w-full rounded-lg border border-[#D4AF37]/30 bg-[#0a0a0a] px-3 py-2 text-[#F3F4F6] outline-none ring-0 transition focus:border-[#D4AF37]/60 focus:shadow-[0_0_0_3px_rgba(212,175,55,0.25)]"
-              />
-            </div>
-          </div>
+    <div className="w-full rounded-xl border border-[#D4AF37]/30 bg-black/60 backdrop-blur-sm p-5 md:p-6">
+      <h3 className="text-[#F5DEB3] font-semibold text-lg mb-4">Set Duration</h3>
+      <div className="grid grid-cols-2 gap-4 items-end md:grid-cols-4">
+        <div>
+          <label className="block text-sm text-[#F5DEB3]/80 mb-1">Hours</label>
+          <input
+            type="number"
+            min="0"
+            value={hours}
+            onChange={(e) => setHours(e.target.value)}
+            className="w-full rounded-lg bg-black/70 border border-[#D4AF37]/30 text-[#F5DEB3] px-3 py-2 outline-none focus:border-[#E6C04F]"
+          />
         </div>
-
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPreset(4)}
-              className="rounded-md border border-[#D4AF37]/30 px-3 py-1.5 text-sm text-[#F3F4F6] transition hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/10"
-            >
-              4h
-            </button>
-            <button
-              type="button"
-              onClick={() => setPreset(6)}
-              className="rounded-md border border-[#D4AF37]/30 px-3 py-1.5 text-sm text-[#F3F4F6] transition hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/10"
-            >
-              6h
-            </button>
-            <button
-              type="button"
-              onClick={() => setPreset(12)}
-              className="rounded-md border border-[#D4AF37]/30 px-3 py-1.5 text-sm text-[#F3F4F6] transition hover:border-[#D4AF37]/70 hover:bg-[#D4AF37]/10"
-            >
-              12h
-            </button>
-          </div>
-
+        <div>
+          <label className="block text-sm text-[#F5DEB3]/80 mb-1">Minutes</label>
+          <input
+            type="number"
+            min="0"
+            value={minutes}
+            onChange={(e) => setMinutes(e.target.value)}
+            className="w-full rounded-lg bg-black/70 border border-[#D4AF37]/30 text-[#F5DEB3] px-3 py-2 outline-none focus:border-[#E6C04F]"
+          />
+        </div>
+        <button
+          onClick={start}
+          className="col-span-2 md:col-span-1 h-10 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#E6C04F] text-black font-semibold shadow hover:brightness-110 transition"
+          disabled={running}
+        >
+          {running ? 'Running…' : 'Start'}
+        </button>
+        <div className="flex gap-3 col-span-2 md:col-span-1">
           <button
-            type="button"
-            onClick={handleStart}
-            disabled={disabled}
-            className="group inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#E6C04F] px-5 py-2.5 text-sm font-semibold text-black shadow-[0_10px_30px_-10px_rgba(212,175,55,0.6)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={onStop}
+            className="flex-1 h-10 rounded-lg border border-[#D4AF37]/40 text-[#F5DEB3] hover:bg-white/5 transition"
           >
-            Start Timer
-            <span className="pointer-events-none inline-block translate-x-0 transition group-hover:translate-x-0.5">→</span>
+            Stop
+          </button>
+          <button
+            onClick={onReset}
+            className="flex-1 h-10 rounded-lg border border-[#D4AF37]/40 text-[#F5DEB3] hover:bg-white/5 transition"
+          >
+            Reset
           </button>
         </div>
       </div>
