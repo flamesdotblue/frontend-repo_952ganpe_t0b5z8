@@ -140,6 +140,59 @@ export default function App() {
     pushAlert('Timer reset.', 'info');
   }, [pushAlert]);
 
+  // Console control API
+  const stopTimer = useCallback(() => {
+    setRunning(false);
+    localStorage.setItem(LS_KEYS.running, '0');
+    pushAlert('Timer paused.', 'info');
+  }, [pushAlert]);
+
+  const startMs = useCallback((ms) => {
+    const total = Number(ms);
+    if (!Number.isFinite(total) || total <= 0) {
+      pushAlert('Start failed: provide a positive millisecond value.', 'warning');
+      return;
+    }
+    handleStart(total);
+  }, [handleStart, pushAlert]);
+
+  const startHours = useCallback((h = 1) => {
+    const hours = Number(h);
+    if (!Number.isFinite(hours) || hours <= 0) {
+      pushAlert('Start failed: provide a positive hour value.', 'warning');
+      return;
+    }
+    handleStart(Math.round(hours * 3600000));
+  }, [handleStart, pushAlert]);
+
+  const status = useCallback(() => ({
+    running,
+    startTs,
+    durationMs,
+    remainingMs,
+    elapsedMs,
+    lastHourNotified,
+    finalHourWarned,
+  }), [running, startTs, durationMs, remainingMs, elapsedMs, lastHourNotified, finalHourWarned]);
+
+  useEffect(() => {
+    // Expose simple console API: window.hackTimer
+    if (typeof window !== 'undefined') {
+      window.hackTimer = {
+        stop: stopTimer,
+        reset: handleReset,
+        startMs,
+        startHours,
+        status,
+      };
+    }
+    return () => {
+      if (typeof window !== 'undefined' && window.hackTimer) {
+        delete window.hackTimer;
+      }
+    };
+  }, [stopTimer, handleReset, startMs, startHours, status]);
+
   return (
     <div className="min-h-screen bg-[#0a0e27] text-cyan-50">
       <SplineHero />
